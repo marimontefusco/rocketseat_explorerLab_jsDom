@@ -1,4 +1,5 @@
 import "./css/index.css";
+import IMask from "imask";
 
 const ccBlurColor01 = document.querySelector(".cc-bg svg g g:nth-child(1) path");
 const ccBlurColor02 =  document.querySelector(".cc-bg svg >g g:nth-child(2) path"); 
@@ -16,6 +17,9 @@ function setCardType(cardType){
   ccBlurColor01.setAttribute("fill", colors[cardType][0]);
   ccBlurColor02.setAttribute("fill", colors[cardType][1]);
   ccLogo.setAttribute("src", `cc-${cardType}.svg`);
+
+  //element.setAttribute(nomeAtributo, valorDesejado);
+
 };
 
 //Chamando a função setCardType() aqui no escopo
@@ -25,4 +29,13 @@ function setCardType(cardType){
 globalThis.setCardType = setCardType;
 
 
-//element.setAttribute(nomeAtributo, valorDesejado);
+/** Security Code **/ 
+const securityCode = document.querySelector("#security-code");
+
+  //Padrão da máscara -> 4 dígitos(number)
+const securityCodePatternMask = {
+  mask: "0000"
+};
+
+const maskedSecurityCode = IMask(securityCode, securityCodePatternMask);
+
