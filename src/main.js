@@ -17,8 +17,7 @@ function setCardType(cardType){
   ccBlurColor01.setAttribute("fill", colors[cardType][0]);
   ccBlurColor02.setAttribute("fill", colors[cardType][1]);
   ccLogo.setAttribute("src", `cc-${cardType}.svg`);
-
-  //element.setAttribute(nomeAtributo, valorDesejado);
+  // element.setAttribute(nomeAtributo, valorDesejado);
 
 };
 
@@ -29,17 +28,17 @@ function setCardType(cardType){
 globalThis.setCardType = setCardType;
 
 
-/** Security Code **/ 
+/** Security Code Input **/ 
 const securityCode = document.querySelector("#security-code");
 
-  //Padrão da máscara -> 4 dígitos(number)
 const securityCodePatternMask = {
-  mask: "0000"
+  mask: "0000" 
+  //padrão da máscara -> 4 dígitos(number)
 };
 
 const maskedSecurityCode = IMask(securityCode, securityCodePatternMask);
 
-/** Expiration date **/ 
+/** Expiration Date Input **/ 
 const expirationDate = document.querySelector("#expiration-date");
 
 const expirationDatePatternMask = {
@@ -59,3 +58,52 @@ const expirationDatePatternMask = {
 };
 
 const maskedExpirationDate = IMask(expirationDate, expirationDatePatternMask);
+
+/** Card Number Input **/ 
+// DispatchMask -> Máscaras dinâmicas ->> diversos elementos
+const cardNumber = document.querySelector("#card-number");
+
+const cardNumberPatternMask = {
+  mask: [
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /^4\d{0,15}/,
+      cardtype: "visa"
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /^(5[1-5]\d{0,2}|22[2-9]\d{0,1}|2[3-7]\d{0,2})\d{0-12}/,
+      cardtype: "mastercard"
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /^3[47]\d{0,13}/,
+      cardtype: "american express"
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      cardtype: "default"
+    },
+  ],
+  dispatch: function(appended, dynamicMasked) {
+    const number = (dynamicMasked.value + appended).replace(/\D/g, ""); 
+      //só aceita dígitos
+
+    const findCardNumberMask = dynamicMasked.compiledMasks.find(
+      (maskItem) => {
+      return number.match(maskItem.regex);
+    })
+
+    console.log(findCardNumberMask)
+
+    return findCardNumberMask;
+  }
+};
+
+const maskedCardNumber = IMask(cardNumber, cardNumberPatternMask);
+
+//dynamicMasked -> seleciona automaticamente a máscara apropriada do conjunto de masks fornecido
+
+//Appended -> anexado
+
+//.replace(/\D/g, '') -> substitua Não Digito por vazio -> tudo o que não for digito ex: a b c não são digitos 
